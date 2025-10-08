@@ -3,6 +3,15 @@
 import { PageHeader } from "@/components/page-header"
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts"
 import { Facebook, Chrome, DollarSign, TrendingUp, Zap, Target } from "lucide-react"
+import {
+  tooltipTheme,
+  axisTicks,
+  axisStroke,
+  gridStroke,
+  legendStyle,
+  activeDotStyle,
+  formatCurrency,
+} from "@/lib/recharts-theme"
 
 // Mock data for platform comparison
 const platformData = [
@@ -223,17 +232,11 @@ export default function CampanhasPage() {
 
         <ResponsiveContainer width="100%" height={350}>
           <LineChart data={platformData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
-            <XAxis dataKey="date" stroke="#666" />
-            <YAxis stroke="#666" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#1A1A1A",
-                border: "1px solid #2A2A2A",
-                borderRadius: "8px",
-              }}
-            />
-            <Legend />
+            <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+            <XAxis dataKey="date" stroke={axisStroke} tick={axisTicks} />
+            <YAxis stroke={axisStroke} tick={axisTicks} tickFormatter={formatCurrency} />
+            <Tooltip {...tooltipTheme} formatter={(value: number) => formatCurrency(value)} />
+            <Legend wrapperStyle={legendStyle} />
             <Line
               type="monotone"
               dataKey="facebook"
@@ -241,6 +244,7 @@ export default function CampanhasPage() {
               strokeWidth={3}
               name="Facebook Ads"
               dot={{ fill: "#3B82F6", r: 4 }}
+              activeDot={activeDotStyle}
             />
             <Line
               type="monotone"
@@ -249,6 +253,7 @@ export default function CampanhasPage() {
               strokeWidth={3}
               name="Google Ads"
               dot={{ fill: "#9333EA", r: 4 }}
+              activeDot={activeDotStyle}
             />
           </LineChart>
         </ResponsiveContainer>

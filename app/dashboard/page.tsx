@@ -17,6 +17,15 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts"
+import {
+  tooltipTheme,
+  axisTicks,
+  axisStroke,
+  gridStroke,
+  activeDotStyle,
+  activeBarStyle,
+  formatNumber,
+} from "@/lib/recharts-theme"
 
 // Mock data
 const performanceData = [
@@ -79,22 +88,18 @@ export default function DashboardPage() {
                   <stop offset="100%" stopColor="#F20587" />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
-              <XAxis dataKey="month" stroke="#666" />
-              <YAxis stroke="#666" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1A1A1A",
-                  border: "1px solid #2A2A2A",
-                  borderRadius: "8px",
-                }}
-              />
+              <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+              <XAxis dataKey="month" stroke={axisStroke} tick={axisTicks} />
+              <YAxis stroke={axisStroke} tick={axisTicks} tickFormatter={formatNumber} />
+              <Tooltip {...tooltipTheme} formatter={(value: number) => formatNumber(value)} />
               <Line
                 type="monotone"
                 dataKey="value"
                 stroke="url(#lineGradient)"
                 strokeWidth={3}
                 fill="url(#chartGradient)"
+                activeDot={activeDotStyle}
+                dot={false}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -113,17 +118,11 @@ export default function DashboardPage() {
                   <stop offset="100%" stopColor="#9333EA" />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2A2A2A" />
-              <XAxis dataKey="day" stroke="#666" />
-              <YAxis stroke="#666" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1A1A1A",
-                  border: "1px solid #2A2A2A",
-                  borderRadius: "8px",
-                }}
-              />
-              <Bar dataKey="conversions" fill="url(#barGradient)" radius={[8, 8, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
+              <XAxis dataKey="day" stroke={axisStroke} tick={axisTicks} />
+              <YAxis stroke={axisStroke} tick={axisTicks} tickFormatter={formatNumber} />
+              <Tooltip {...tooltipTheme} formatter={(value: number) => formatNumber(value)} />
+              <Bar dataKey="conversions" fill="url(#barGradient)" radius={[8, 8, 0, 0]} activeBar={activeBarStyle} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -146,12 +145,15 @@ export default function DashboardPage() {
                 outerRadius={110}
                 paddingAngle={2}
                 dataKey="value"
+                label={({ name, value }) => `${name}: ${value}%`}
+                labelLine={false}
+                style={{ fontSize: 13, fontWeight: 600, fill: "#FFFFFF" }}
               >
                 {channelData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip {...tooltipTheme} formatter={(value: number) => `${value}%`} />
             </PieChart>
           </ResponsiveContainer>
 
